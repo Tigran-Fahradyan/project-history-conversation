@@ -37,13 +37,13 @@ class ProjectsController < ApplicationController
     @project.project_events.create!(
       user: current_user,
       event_type: :comment,
-      content: params[:project_event][:content]
+      content: params[:content]
     )
 
     redirect_to @project, notice: 'Comment added successfully.'
-  rescue StandardError => e
-    flash.now[:alert] = "An error occurred: #{e.message}"
-    render :show
+  # rescue StandardError => e
+  #   flash.now[:alert] = "An error occurred: #{e.message}"
+  #   render :show
   end
 
   private
