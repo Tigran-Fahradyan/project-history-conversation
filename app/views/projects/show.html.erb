@@ -1,0 +1,41 @@
+<h1><%= @project.name %></h1>
+<p><strong>Description:</strong> <%= @project.description %></p>
+<p><strong>Status:</strong> <%= @project.status.humanize %></p>
+
+<%= form_with url: update_status_project_path(@project), method: :post, local: true do %>
+    <div>
+        <%= label_tag :status, "Change Status" %>
+        <%= select_tag :status, options_for_select(Project.statuses.keys.map{|s| [s.humanize, s] }, @project.status) %>
+        <%= submit_tag "Update Status" %>
+    </div>
+<% end %>
+
+
+<hr>
+
+
+<%= form_with url: add_comment_project_path(@project), method: :post, local: true do |f| %>
+    <div>
+        <%= f.label :content, "Add a Comment" %><br>
+        <%= f.text_area :content, rows: 3, cols: 60 %>
+    </div>
+    <div>
+        <%= f.submit "Add Comment" %>
+    </div>
+<% end %>
+
+
+<h2>Conversation History</h2>
+<ul>
+    <% @project.project_events.order(created_at: :asc).each do |event| %>
+        <li>
+            <strong><%= event.user.name %>:</strong>
+            <% if event.comment? %>
+                <%= event.content %>
+            <% elsif event.status_change? %>
+                <%= "Status changed from: #{event.from_status.humanize} to: #{event.to_status.humanize}" %>
+            <% end %>
+            <small><%= time_ago_in_words(event.created_at) %> ago</small>
+        </li>
+    <% end %>
+</ul>
