@@ -1,9 +1,7 @@
 Rails.application.routes.draw do
   root "home#index"
 
-  devise_for :users, skip: [:registrations], controllers: {
-    sessions: "users/sessions"
-  }
+  devise_for :users, skip: [:registrations]
 
   resources :projects, only: [:index, :show] do
     member do
